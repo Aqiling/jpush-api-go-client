@@ -48,6 +48,7 @@ type AndroidNotification struct {
 	BigText string    `json:"big_text,omitempty"`
 	Inbox string    `json:"inbox,omitempty"`
 	BigPicPath string    `json:"big_pic_path,omitempty"`
+	UriActivity string `json:"uri_activity"`
 }
 
 func NewAndroidNotification(alert string) *AndroidNotification {
