@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/jukylin/jpush-api-go-client/common"
 )
@@ -20,6 +19,7 @@ type PushObject struct {
 	Notification *Notification `json:"notification"`
 	Message      *Message      `json:"message"`
 	Options      *Options      `json:"options"`
+	Cid      	 *Cid      	   `json:"cid"`
 }
 
 func NewPushObject() *PushObject {
@@ -49,6 +49,12 @@ func (po *PushObject) Validate() error {
 		}
 	}
 
+	if po.Cid != nil {
+		if err := po.Cid.Validate(); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -64,6 +70,7 @@ func (po *PushObject) MarshalJSON() ([]byte, error) {
 		Notification: po.Notification,
 		Message:      po.Message,
 		Options:      po.Options,
+		Cid:      	  po.Cid.Value(),
 	}
 	return json.Marshal(wrapper)
 }
@@ -74,14 +81,15 @@ type pushObjectWrapper struct {
 	Notification *Notification `json:"notification,omitempty"`
 	Message      *Message      `json:"message,omitempty"`
 	Options      *Options      `json:"options,omitempty"`
+	Cid          string      	   `json:"cid,omitempty"`
 }
 
 type PushResult struct {
 	common.ResponseBase
 
 	// 成功时 msg_id 是 string 类型。。。
-	// 失败时 msg_id 是 int 类型。。。
-	MsgId  interface{} `json:"msg_id"`
+	// 失败时 msg_id 是 string 类型。。。
+	MsgId  string `json:"msg_id"`
 	SendNo string      `json:"sendno"`
 }
 
@@ -89,8 +97,8 @@ type PushResult struct {
 // 失败： {"msg_id": 1035959738, "error": {"message": "app_key does not exist", "code": 1008}}
 func (pr *PushResult) FromResponse(resp *http.Response) error {
 	pr.ResponseBase = common.NewResponseBase(resp)
-	if pr.ResponseBase.MsgId != nil {
-		pr.MsgId = strconv.FormatFloat(pr.ResponseBase.MsgId.(float64), 'g', 64, 64)
+	if pr.ResponseBase.MsgId != "" {
+		pr.MsgId = pr.ResponseBase.MsgId
 	}
 	if !pr.Ok() {
 		return nil

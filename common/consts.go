@@ -13,6 +13,7 @@ const (
 
 	PUSH_URL          = push_host + "/v3/push"
 	PUSH_VALIDATE_URL = push_host + "/v3/push/validate"
+	PUSH_CID_URL = push_host + "/v3/push/cid"
 
 	// GET /v3/devices/{registration_id}
 	DEVICE_URL = device_host + "/v3/devices/%s"

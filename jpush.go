@@ -163,6 +163,30 @@ func (jpc *JPushClient) GetReceivedReport(msgIds []uint64) (*report.ReceiveRepor
 	return result, err
 }
 
+func (jpc *JPushClient) GetCid(count, ctype string) (*push.CidResult, error) {
+	params := make(map[string]interface{}, 2)
+
+	if count == "" {
+		params["count"] = "1"
+	}else{
+		params["count"] = count
+	}
+	if ctype == "" {
+		params["type"] = "push"
+	}else{
+		params["type"] = ctype
+	}
+
+	resp, err := jpc.http.Get(common.PUSH_CID_URL, params, jpc.headers)
+	if err != nil {
+		return nil, err
+	}
+
+	result := &push.CidResult{}
+	err = result.FromResponse(resp)
+	return result, err
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 func addPlatformsToParams(platforms []string) map[string]interface{} {
