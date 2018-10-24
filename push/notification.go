@@ -62,7 +62,7 @@ type IosNotification struct {
 	platformNotification
 
 	Sound            string `json:"sound,omitempty"`
-	Badge            int    `json:"badge,omitempty"`
+	Badge            string    `json:"badge,omitempty"`
 	ContentAvailable bool   `json:"content-available,omitempty"`
 	Category         string `json:"category,omitempty"`
 	MutableContent   bool `json:"mutable-content,omitempty"`
